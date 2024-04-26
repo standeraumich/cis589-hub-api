@@ -19,11 +19,10 @@ async function getData() {
 async function getBirdLatest() {
   const dataList = []
   const [row] = await pool.query(`
-    SELECT a.*
-    FROM \`birds\` a
-	  LEFT JOIN \`birds\` b
-		ON a.bird = b.bird AND a.created < b.created
-    WHERE b.created is NULL;
+    SELECT *
+    FROM birds
+    ORDER BY id DESC
+    LIMIT 1;
     `)
   row.map((val, key) => (
     dataList.push(val.created, val.bird, val.lat, val.lon)
@@ -41,17 +40,18 @@ async function insertBirdData(bird, lat, lon) {
 
 /* GET latest bird data. */
 router.get('/latest', async function (req, res, next) {
-  const birdData = await getBirdLatest()
-  // res.json({
-  //   data: birdData
-  // });
-  res.send(birdData)
+  const birdData = await getBirdLatest();
+  res.json({
+    data: birdData
+  });
 });
 
 /* GET all bird data. */
 router.get('/', async function (req, res, next) {
   const birdData = await getData()
-  res.send(birdData)
+  res.json({
+    data: birdData
+  });
 });
 
 /* POST bird data entry */
@@ -60,6 +60,5 @@ router.post('/', async function (req, res, next) {
   const birdData = await insertBirdData(bird, lat, lon)
   res.status(201).send(birdData)
 });
-
 
 module.exports = router;

@@ -5,11 +5,14 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var birdsRouter = require('./routes/birds');
 var dotenv = require('dotenv')
 var cors = require('cors')
 var app = express();
+app.use(function (req, res, next) {
+  req.headers['if-none-match'] = 'no-match-for-this';
+  next();
+});
 dotenv.config()
 
 app.use(cors({ origin: `http://${process.env.HOST}:3001` }));
@@ -25,8 +28,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/birds', birdsRouter);
 
 // catch 404 and forward to error handler

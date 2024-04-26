@@ -17,10 +17,11 @@ You must have Node Package Manager and Node.js installed on your local machine. 
 CREATE DATABASE hub_api;
 USE hub_api;
 
-CREATE TABLE sensors (
+CREATE TABLE birds (
 	id integer PRIMARY KEY AUTO_INCREMENT,
-	sensor VARCHAR(255) NOT NULL,
-	data float NOT NULL,
+	bird VARCHAR(255) NOT NULL,
+	lat float NOT NULL,
+	lon float NOT NULL,
 	created TIMESTAMP NOT NULL DEFAULT NOW() 
 );
 
@@ -29,7 +30,7 @@ CREATE TABLE sensors (
 # Setup `hub-api`
 
 - clone this repository to your local computer: `git clone https://github.com/standeraumich/ece574_hub-api.git`
-- In an IDE of choice (I’m using VSCode) open the `ece574_hub-api` so your working directory looks like this:
+- In an IDE of choice (I’m using VSCode) open the `cis589-hub-api` so your working directory looks like this:
     
     ![File Explorer](img/file_explorer.png)
     
@@ -54,13 +55,12 @@ MYSQL_DATABASE='hub_api'
 ```python
 import requests 
 
-url = 'http://localhost:3001/sensors'
-myobj = {'sensor': 'test sensor',
-         'data':400}
+url = 'http://localhost:3001/birds'
+myobj = {"bird": "House Finch", "lat":12, "lon":100}
 
 x = requests.post(url, json = myobj)
 
 print(x.text)
 ```
 
-- You should be able to view all the sensor data by going into a browser and putting in the address: `http://localhost:3001/sensors` and viewing the latest sensor data by going to: `http://localhost:3001/sensors/latest`
+- You should be able to view all the sensor data by going into a browser and putting in the address: `http://localhost:3001/birds` and viewing the latest sensor data by going to: `http://localhost:3001/birds/latest`
